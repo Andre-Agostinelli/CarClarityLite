@@ -1,0 +1,13 @@
+beautifulsoup4
+selenium
+requests
+pandas
+sqlalchemy
+streamlit
+altair
+geopy
+python-dotenv
+lxml
+tqdm
+scikit-learn
+webdriver-manager
