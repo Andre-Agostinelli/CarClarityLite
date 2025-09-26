@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_carsdotcom(search_url, max_listings=20, debug=True):
+def scrape_carsdotcom(search_url, max_listings=20, debug=False):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                       "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -10,21 +10,32 @@ def scrape_carsdotcom(search_url, max_listings=20, debug=True):
     }
 
     try:
-        r = requests.get(search_url, headers=headers, timeout=15)  # timeout added
+        r = requests.get(search_url, headers=headers, timeout=15)
         r.raise_for_status()
     except Exception as e:
         print("⚠️ Request failed:", e)
         return []
 
     soup = BeautifulSoup(r.text, "html.parser")
-
     cards = soup.select("div.vehicle-card")
-    results = []
 
-    if not cards and debug:
+    if debug:
+        # Save full HTML snapshot
         with open("last_carsdotcom.html", "w", encoding="utf-8") as f:
             f.write(r.text)
-        print("⚠️ No listings found. Saved HTML for debugging.")
+
+        # Save plaintext snapshot of all cards
+        with open("last_carsdotcom.txt", "w", encoding="utf-8") as f:
+            for idx, card in enumerate(cards, start=1):
+                f.write(f"--- CARD {idx} ---\n")
+                f.write(card.get_text("\n", strip=True))
+                f.write("\n\n")
+
+        print(f"💾 Saved debug snapshots: last_carsdotcom.html + last_carsdotcom.txt ({len(cards)} cards found)")
+
+    results = []
+    if not cards:
+        print("⚠️ No listings found in Cars.com page.")
         return []
 
     for card in cards[:max_listings]:
@@ -61,3 +72,9 @@ def scrape_carsdotcom(search_url, max_listings=20, debug=True):
             print("Parse error:", e)
 
     return results
+
+if __name__ == "__main__":
+    url = "https://www.cars.com/shopping/results/?list_price_max=&makes[]=honda&maximum_distance=50&models[]=honda-civic&stock_type=used&zip=01721"
+    cars = scrape_carsdotcom(url, max_listings=5, debug=True)
+    for c in cars:
+        print(c)
