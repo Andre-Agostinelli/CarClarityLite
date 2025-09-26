@@ -11,3 +11,4 @@ lxml
 tqdm
 scikit-learn
 webdriver-manager
+matplotlib

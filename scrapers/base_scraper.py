@@ -1,4 +1,4 @@
-# scrapers/base_scraper.py
+# scrapers/base_scraper.py - not currently in use unless we want OOP for selenium based site scraping
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver

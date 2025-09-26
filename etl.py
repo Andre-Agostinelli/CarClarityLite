@@ -2,10 +2,11 @@ import pandas as pd
 from sqlalchemy import Table, MetaData
 from db import get_engine, init_db
 
+init_db()
+
 def insert_cars(listings, source="cargurus"):
     """Insert scraped listings (list of dicts) into DB."""
     engine = get_engine()
-    init_db()  # ensure table exists
     metadata = MetaData()
     metadata.reflect(bind=engine)
 

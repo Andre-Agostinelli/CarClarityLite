@@ -6,10 +6,11 @@ def get_engine():
     return create_engine(f"sqlite:///{DB_FILE}", echo=False, future=True)
 
 def init_db():
+    """Ensure cars.db and cars table exist."""
     engine = get_engine()
     metadata = MetaData()
 
-    cars = Table(
+    Table(
         "cars",
         metadata,
         Column("id", Integer, primary_key=True, autoincrement=True),
@@ -24,8 +25,8 @@ def init_db():
         Column("fuel", String),
         Column("mpg", String),
         Column("color", String),
-        Column("source", String),   # new
+        Column("source", String),
     )
 
-    metadata.create_all(engine)
+    metadata.create_all(engine)  # creates DB + table if missing
     return engine
